@@ -16,7 +16,7 @@ ros2 topic list
 ```
 
 **示例输出**:
-```
+```text
 /chatter
 /parameter_events
 /rosout
@@ -36,7 +36,7 @@ ros2 topic echo /chatter
 ```
 
 **示例输出**:
-```
+```text
 data: 'Hello, World! 1'
 ---
 data: 'Hello, World! 2'
@@ -58,7 +58,7 @@ ros2 topic pub --once /chatter std_msgs/msg/String '{data: "Hi there"}'
 ```
 
 **示例输出**:
-```
+```text
 Publisher new-publisher created, waiting for subscriber...
 ```
 (此时，正在 `echo` 该话题的终端会显示出 `data: 'Hi there'`)
@@ -77,7 +77,7 @@ ros2 service list -t
 ```
 
 **示例输出**:
-```
+```text
 /clear [std_srvs/srv/Empty]
 /reset [std_srvs/srv/Empty]
 /set_bool [std_srvs/srv/SetBool]
@@ -97,7 +97,7 @@ ros2 service call /set_bool std_srvs/srv/SetBool '{data: true}'
 ```
 
 **示例输出**:
-```
+```text
 requester: making request: std_srvs.srv.SetBool_Request(data=True)
 
 response:
@@ -118,7 +118,7 @@ ros2 interface show std_msgs/msg/String
 ```
 
 **示例输出**:
-```
+```text
 # This is a simple string message.
 string data
 ```
@@ -137,7 +137,7 @@ ros2 topic info /chatter -v
 ```
 
 **示例输出**:
-```
+```text
 Type: std_msgs/msg/String
 
 Publisher count: 1

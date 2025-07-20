@@ -33,7 +33,7 @@ ros2 topic echo /chatter
 ```
 
 **输出示例**：
-```
+```text
 data: 'Hello, World! 1'
 ---
 data: 'Hello, World! 2'
@@ -75,7 +75,7 @@ data: 'Hello, World! 3'
     ros2 service list -t
     ```
     输出可能像这样：
-    ```
+    ```text
     /set_bool [std_srvs/srv/SetBool]
     ...
     ```
@@ -87,7 +87,7 @@ data: 'Hello, World! 3'
     ros2 interface show std_srvs/srv/SetBool
     ```
     输出会告诉你请求（Request）和响应（Response）的字段：
-    ```
+    ```text
     # Request
     bool data   # The value to set
     ---
@@ -105,7 +105,7 @@ data: 'Hello, World! 3'
     **注意**：YAML 数据必须用单引号 `'` 包裹。
 
 **输出示例**：
-```
+```text
 requester: making request: std_srvs.srv.SetBool_Request(data=True)
 
 response:
