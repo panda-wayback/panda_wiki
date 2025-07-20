@@ -565,6 +565,91 @@ python3 action_client.py
 收到结果: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 ```
 
+## Action 与执行器 (Executor)
+
+一个非常关键且容易被忽略的问题是：**为什么我的 Action 无法被取消？**
+
+这通常与 ROS2 的**执行器 (Executor)** 模型有关。
+
+### `SingleThreadedExecutor` (单线程) 的陷阱
+
+当你使用 `rclpy.spin(node)` 时，其背后使用的是 `SingleThreadedExecutor`。它存在一个致命问题：
+
+- **单线程处理**：所有回调（订阅、服务、Action 执行、Action 取取消）都在**同一个线程**中排队等待执行。
+- **Action 阻塞**：当 Action 的 `execute_callback` 开始执行一个长时间任务时（例如，`while` 循环），它会**独占这个唯一的线程**。
+- **无法响应新事件**：此时，如果客户端发送“取消请求”，处理这个请求的回调需要排队。但由于线程被 Action 的执行逻辑阻塞，取消回调**永远没有机会被执行**。
+
+**结果：Action 看起来就像“卡住了”，无法被取消。**
+
+### `MultiThreadedExecutor` (多线程) 的解决方案
+
+`MultiThreadedExecutor` 使用一个**线程池**来并发处理回调，完美地解决了阻塞问题：
+
+- **并发执行**：Action 的执行回调在**线程 A**中运行。
+- **响应及时**：当“取消请求”到达时，执行器会从线程池中拿出空闲的**线程 B**来处理取消回调。
+- **成功取消**：线程 B 设置了取消状态，线程 A 在下一次循环检查 `goal_handle.is_cancel_requested` 时会发现变化，从而优雅退出。
+
+| 执行器类型 | 适用场景 | 关键问题 |
+| --- | --- | --- |
+| `SingleThreadedExecutor` | 简单、无并发、回调执行极快 | 长时间回调会阻塞所有其他事件 |
+| `MultiThreadedExecutor` | **包含 Action、Timer 的复杂节点** | **必须使用**，否则无法可靠取消 |
+
+### 线程安全问题
+
+使用多线程执行器时，必须注意**线程安全**。如果多个回调同时读写同一个共享变量（例如 `self.current_position`），可能会导致数据错乱。
+
+**解决方案**：使用 `threading.Lock()` 来保护共享数据。
+
+```python
+import threading
+
+class MyActionServer(Node):
+    def __init__(self):
+        # ...
+        self._lock = threading.Lock()
+        self._shared_data = 0
+
+    def timer_callback(self):
+        with self._lock:
+            # 安全地修改数据
+            self._shared_data += 1
+
+    def execute_callback(self, goal_handle):
+        with self._lock:
+            # 安全地读取数据
+            data = self._shared_data
+        # ...
+```
+
+### 推荐的 `main` 函数模板
+
+为了确保 Action 的所有功能（尤其是取消）正常工作，强烈建议使用以下 `main` 函数模板：
+
+```python
+from rclpy.executors import MultiThreadedExecutor
+import rclpy
+
+def main(args=None):
+    rclpy.init(args=args)
+    
+    action_server_node = SimpleActionServer()
+    
+    # 使用 MultiThreadedExecutor
+    executor = MultiThreadedExecutor()
+    executor.add_node(action_server_node)
+    
+    try:
+        # spin() 在这里会阻塞，直到节点关闭
+        executor.spin()
+    finally:
+        executor.shutdown()
+        action_server_node.destroy_node()
+        rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
+```
+
 ## 高级功能
 
 ### 取消机制
