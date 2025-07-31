@@ -1,0 +1,22 @@
+# Cursor Rules for Panda Wiki Project
+
+## Code Block Language Default
+When generating documentation, if a code block doesn't specify a specific programming language, it should be marked as `text` by default. For example, use ```text instead of ```.
+
+## Documentation Guidelines
+- Use Chinese language for all documentation
+- Keep explanations concise and clear
+- Focus on practical examples and use cases
+- Avoid overly complex technical details for beginner tutorials
+- Emphasize conceptual understanding over code examples when appropriate
+
+## File Organization
+- Maintain clear directory structure
+- Use descriptive file names
+- Group related content in appropriate directories
+
+## Code Examples
+- When showing code examples, specify the language explicitly
+- For configuration files, use appropriate language tags (xml, yaml, json, etc.)
+- For shell commands, use ```bash
+- For general text or explanations, use ```text 
