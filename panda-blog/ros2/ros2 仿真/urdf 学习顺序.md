@@ -6,7 +6,7 @@ URDF（Unified Robot Description Format）是ROS中描述机器人的标准格�
 
 ## URDF的层级结构
 
-```
+```text
 robot (机器人)
   ├── link (连杆)
   │   ├── visual (视觉)
