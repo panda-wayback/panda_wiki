@@ -4,7 +4,7 @@
 
 在开始学习之前，让我们回顾一下URDF的整体层级结构：
 
-```
+```text
 robot (机器人)
   ├── link (连杆)
   │   ├── visual (视觉)
@@ -101,7 +101,7 @@ robot (机器人)
 ## parent和child的关系
 
 ### 理解连接关系
-```
+```text
 parent link (父零件) ← joint (关节) → child link (子零件)
 ```
 

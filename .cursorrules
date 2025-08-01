@@ -1,22 +1,31 @@
-# Cursor Rules for Panda Wiki Project
+# Panda Wiki 项目的 Cursor 规则
 
-## Code Block Language Default
-When generating documentation, if a code block doesn't specify a specific programming language, it should be marked as `text` by default. For example, use ```text instead of ```.
+## 重要：代码块语言要求
+**强制要求**：所有代码块必须指定语言。绝对不要使用 ``` 而不加语言标记。
 
-## Documentation Guidelines
-- Use Chinese language for all documentation
-- Keep explanations concise and clear
-- Focus on practical examples and use cases
-- Avoid overly complex technical details for beginner tutorials
-- Emphasize conceptual understanding over code examples when appropriate
+**默认规则**：如果没有特定语言需要，默认使用 ```text。
 
-## File Organization
-- Maintain clear directory structure
-- Use descriptive file names
-- Group related content in appropriate directories
+**示例**：
+- ✅ ```text （用于一般文本、解释说明、表格）
+- ✅ ```xml （用于URDF文件）
+- ✅ ```bash （用于shell命令）
+- ✅ ```yaml （用于YAML文件）
+- ❌ ``` （绝对不要不加语言标记）
 
-## Code Examples
-- When showing code examples, specify the language explicitly
-- For configuration files, use appropriate language tags (xml, yaml, json, etc.)
-- For shell commands, use ```bash
-- For general text or explanations, use ```text 
+## 文档编写指南
+- 所有文档使用中文语言
+- 保持解释简洁明了
+- 专注于实际示例和用例
+- 初学者教程避免过于复杂的技术细节
+- 适当强调概念理解而非代码示例
+
+## 文件组织
+- 维护清晰的目录结构
+- 使用描述性的文件名
+- 将相关内容分组到适当的目录中
+
+## 代码示例规范
+- 显示代码示例时明确指定语言
+- 配置文件使用适当的语言标签（xml、yaml、json等）
+- shell命令使用 ```bash
+- 一般文本或解释使用 ```text 
